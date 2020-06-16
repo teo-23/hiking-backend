@@ -51,7 +51,7 @@ router.post('/getTrails', (req, res, next) => {
 router.post('/createTrail', uploadCloud.single('trailimage'), (req, res, next) => {
   console.log(req.body)
   console.log(req.file)
-  const {name, summary, latitude, longitude, difficulty} = req.body
+  const {name, summary, latitude, longitude, difficulty, rating} = req.body
 
   // console.log(req.file.url)
   
@@ -60,12 +60,13 @@ router.post('/createTrail', uploadCloud.single('trailimage'), (req, res, next) =
     summary,
     imgSmall: req.file.path,
     difficulty,
+    rating,
     latitude,
     longitude,
     owner: req.user._id
   })
-  .then(response => {
-  res.status(200).json({message : 'Thank you for submitting a new trail'});
+  .then(() => {
+  res.status(200).json({message : `Thank you for submitting a new trail ${req.user.username}`});
   })
   .catch(err => {
   res.status(400).json(err);

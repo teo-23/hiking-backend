@@ -5,8 +5,9 @@ const User = require('./user-model');
 const trailSchema = new Schema({
   name: String,
   summary: String,
-  imgSmall: String, // still working on implementing files now
+  imgSmall: String, 
   difficulty: String,
+  rating: Number,
   latitude: Number,
   longitude: Number,
   owner: {type: Schema.Types.ObjectId, ref: 'User'}
