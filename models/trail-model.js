@@ -7,7 +7,7 @@ const trailSchema = new Schema({
   summary: String,
   imgSmall: String, 
   difficulty: String,
-  rating: Number,
+  stars: Number,
   latitude: Number,
   longitude: Number,
   owner: {type: Schema.Types.ObjectId, ref: 'User'}
