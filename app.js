@@ -50,7 +50,7 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 // Sessions
 app.use(session({
-    secret: "some secret goes here", 
+    secret: "michielteo", 
     resave: true, 
     saveUninitialized: true
 }));
