@@ -64,7 +64,7 @@ app.locals.title = 'Hi, King';
 //Cors
 app.use(cors({
     credentials: true, 
-    origin: ['https://distracted-ride-f0ae69.netlify.app']
+    origin: [process.env.CORS_URI]
 }));
 
 // ROUTES MIDDLEWARE STARTS HERE:
