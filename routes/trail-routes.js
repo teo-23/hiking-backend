@@ -14,7 +14,8 @@ const uploadCloud = require('../configs/cloudinary');
 
 
 router.post('/getTrails', (req, res, next) => {
-  const {lat, lng} = req.body
+  const {lat, lng, slider, results} = req.body
+  console.log(req.body)
   let trails = []
 
   function arePointsNear(checkPoint, centerPoint, km) { // returns true if two points are nearby based on amount of km. In this case I use 321km or 200 miles. (same as API)
@@ -25,7 +26,7 @@ router.post('/getTrails', (req, res, next) => {
     return Math.sqrt(dx * dx + dy * dy) <= km;
   }
 
-  axios.get(`https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lng}&maxDistance=200&maxResults=10&key=${process.env.HKINGPROJECT_API_KEY}`)
+  axios.get(`https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lng}&maxDistance=${slider}&maxResults=${results}&key=${process.env.HKINGPROJECT_API_KEY}`)
   .then(response => {
     let newArr = response.data.trails
     newArr.forEach(trail => trails.push(trail))
@@ -35,7 +36,7 @@ router.post('/getTrails', (req, res, next) => {
     .then(theTrails => {
       theTrails.map(trail => {
         let trailCheck = {lat: trail.latitude, lng: trail.longitude}
-        if (arePointsNear(trailCheck, {lat, lng}, 321)) {
+        if (arePointsNear(trailCheck, {lat, lng}, slider)) {
           trails.push(trail)
         } 
       })
