@@ -39,6 +39,7 @@ app.use((req, res, next) =>{
     res.setHeader('Access-Control-Allow-Origin', 'https://pensive-cori-b53a51.netlify.app')
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST') // Browser send
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    res.setHeader('Access-Control-Allow-Credentials', 'true')
     return next()
 })
 // Express View engine setup
