@@ -62,12 +62,11 @@ app.use(passport.session());
 app.locals.title = 'Hi, King';
 
 //Cors
-// app.use(cors({
-//     credentials: true, 
-//     origin: ['https://distracted-ride-f0ae69.netlify.app/']
-// }));
+app.use(cors({
+    credentials: true, 
+    origin: [process.env.CORS_URL]
+}));
 
-app.use(cors());
 
 
 // ROUTES MIDDLEWARE STARTS HERE:
