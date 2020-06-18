@@ -51,7 +51,7 @@ router.post('/getTrails', (req, res, next) => {
 
 router.post('/createTrail', uploadCloud.single('trailimage'), (req, res, next) => {
   console.log(req.body)
-  console.log(req.file)
+  //console.log(req.file)
   const {name, summary, latitude, longitude, difficulty, rating} = req.body
 
   // console.log(req.file.url)
