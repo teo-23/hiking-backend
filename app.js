@@ -64,7 +64,11 @@ app.locals.title = 'Hi, King';
 //Cors
 app.use(Cors({
     credentials: true, 
-    origin: ['https://distracted-ride-f0ae69.netlify.app']
+    origin: [
+        'https://distracted-ride-f0ae69.netlify.app',
+        'https://distracted-ride-f0ae69.netlify.app/login',
+        'https://distracted-ride-f0ae69.netlify.app/signup'
+    ]
 }));
 
 
