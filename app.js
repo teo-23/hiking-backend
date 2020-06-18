@@ -8,7 +8,7 @@ const hbs = require('hbs');
 const mongoose = require('mongoose');
 const logger = require('morgan');
 const path = require('path');
-const cors = require('cors');
+const Cors = require('cors');
 
 
 const session = require('express-session');
@@ -61,14 +61,10 @@ app.use(passport.session());
 // default value for title local
 app.locals.title = 'Hi, King';
 
-Cors
-app.use(cors({
+//Cors
+app.use(Cors({
     credentials: true, 
-    origin: [
-        'https://distracted-ride-f0ae69.netlify.app',
-        'https://distracted-ride-f0ae69.netlify.app/login',
-        'https://distracted-ride-f0ae69.netlify.app/signup'
-    ]
+    origin: ['https://distracted-ride-f0ae69.netlify.app']
 }));
 
 
