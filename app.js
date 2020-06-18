@@ -61,13 +61,17 @@ app.use(passport.session());
 // default value for title local
 app.locals.title = 'Hi, King';
 
-//Cors
-// app.use(cors({
-//     credentials: true, 
-//     origin: ['https://distracted-ride-f0ae69.netlify.app']
-// }));
+Cors
+app.use(cors({
+    credentials: true, 
+    origin: [
+        'https://distracted-ride-f0ae69.netlify.app',
+        'https://distracted-ride-f0ae69.netlify.app/login',
+        'https://distracted-ride-f0ae69.netlify.app/signup'
+    ]
+}));
 
-app.use(cors())
+
 
 // ROUTES MIDDLEWARE STARTS HERE:
 app.use('/api', require('./routes/trail-routes'));
