@@ -69,10 +69,10 @@ app.locals.title = 'Hi, King';
 
 //Cors
 
-// app.use(cors({
-//     credentials: true, 
-//     origin: [process.env.CORS_URL]
-// }));
+app.use(cors({
+    credentials: true, 
+    origin: ['https://pensive-cori-b53a51.netlify.app/']
+}));
 
 
 
