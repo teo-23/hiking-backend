@@ -35,7 +35,12 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
-
+app.use((req, res, next) =>{
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST') // Browser send
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+    return next()
+})
 // Express View engine setup
 app.use(require('node-sass-middleware')({
     src: path.join(__dirname, 'public'),
@@ -62,10 +67,11 @@ app.use(passport.session());
 app.locals.title = 'Hi, King';
 
 //Cors
-app.use(cors({
-    credentials: true, 
-    origin: [process.env.CORS_URL]
-}));
+
+// app.use(cors({
+//     credentials: true, 
+//     origin: [process.env.CORS_URL]
+// }));
 
 
 
