@@ -50,7 +50,7 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 
 // Sessions
 app.use(session({
-    secret: "michielteo", 
+    secret: "some secret goes here", 
     resave: true, 
     saveUninitialized: true
 }));
@@ -64,7 +64,7 @@ app.locals.title = 'Hi, King';
 //Cors
 app.use(cors({
     credentials: true, 
-    origin: [process.env.CORS_URI]
+    origin: process.env.CORS_URL
 }));
 
 // ROUTES MIDDLEWARE STARTS HERE:
