@@ -42,6 +42,7 @@ app.use((req, res, next) =>{
     res.setHeader('Access-Control-Allow-Credentials', 'true')
     return next()
 })
+
 // Express View engine setup
 app.use(require('node-sass-middleware')({
     src: path.join(__dirname, 'public'),
