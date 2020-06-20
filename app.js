@@ -72,7 +72,7 @@ app.locals.title = 'Hi, King';
 
 app.use(cors({
     credentials: true, 
-    origin: [process.env.CORS_URL]
+    origin: ['http://localhost:3000','https://hi-king.netlify.app/','http://localhost:62972']
 }));
 
 
