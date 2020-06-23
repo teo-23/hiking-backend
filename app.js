@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use((req, res, next) =>{
-    res.setHeader('Access-Control-Allow-Origin', 'https://hi-king.netlify.app/')
+    res.setHeader('Access-Control-Allow-Origin', 'https://hi-king.netlify.app/:SameSite=None:Secure')
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST') // Browser send
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     res.setHeader('Access-Control-Allow-Credentials', 'true')
@@ -71,7 +71,7 @@ app.locals.title = 'Hi, King';
 
 app.use(cors({
     credentials: true, 
-    origin: ['http://localhost:3000','https://hi-king.netlify.app/','http://localhost:62972']
+    origin: ['http://localhost:3000','https://hi-king.netlify.app/:SameSite=None:Secure','http://localhost:62972']
 }));
 
 
