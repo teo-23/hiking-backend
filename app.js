@@ -78,13 +78,11 @@ app.use(cors({
 
 
 // ROUTES MIDDLEWARE STARTS HERE:
-app.use('/api', require('./routes/trail-routes'));
-app.use('/api', require('./routes/task-routes'));
-
-const index = require('./routes/index');
-app.use('/', index);
 
 const authRoutes = require('./routes/auth-routes');
 app.use('/api', authRoutes);
+
+const trailRoutes = require('./routes/trail-routes')
+app.use('/api', trailRoutes)
 
 module.exports = app;

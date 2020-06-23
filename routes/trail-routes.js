@@ -1,8 +1,9 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const router = express.Router();
-const axios = require('axios')
-const Trail = require('../models/trail-model');
+const express     = require('express');
+const mongoose    = require('mongoose');
+const router      = express.Router();
+const axios       = require('axios')
+const Trail       = require('../models/trail-model');
+const User        = require('../models/user-model')
 const uploadCloud = require('../configs/cloudinary');
 
 
@@ -12,10 +13,10 @@ const uploadCloud = require('../configs/cloudinary');
 
 
 
-
+// get all trails
 router.post('/getTrails', (req, res, next) => {
   const {lat, lng, slider, results} = req.body
-  console.log(req.body)
+  //console.log(req.body)
   let trails = []
 
   function arePointsNear(checkPoint, centerPoint, km) { // returns true if two points are nearby based on amount of km. In this case I use 321km or 200 miles. (same as API)
@@ -48,14 +49,10 @@ router.post('/getTrails', (req, res, next) => {
   .catch(err => next(err))
 })
 
-
+// create trail
 router.post('/createTrail', uploadCloud.single('trailimage'), (req, res, next) => {
-  console.log(req.body)
-  //console.log(req.file)
+  // console.log(req.body)
   const {name, summary, latitude, longitude, difficulty, rating} = req.body
-
-  // console.log(req.file.url)
-  
   Trail.create({
     name,
     summary,
@@ -66,82 +63,110 @@ router.post('/createTrail', uploadCloud.single('trailimage'), (req, res, next) =
     longitude,
     owner: req.user._id
   })
-  .then(() => {
-  res.status(200).json({message : `Thank you for submitting a new trail ${req.user.username} !`});
+  .then(trail => {
+    User.updateOne({_id:req.user._id},{$push: { trails:trail._id }})
+    .then(() => {
+      res.status(200).json({message : `Thank you for submitting a new trail ${req.user.username} !`});
+    })
   })
   .catch(err => {
   res.status(400).json(err);
   })
 });
 
+// add trail to favorite
 router.post('/addToFavorite', (req, res, next) => {
-  console.log(req.body.trail)
-  const {img, name, difficulty} = req.body.trail
+  
+  const { imgSmall, name, difficulty, stars, summary, latitude, longitude } = req.body.trail
+  
   Trail.find({name})
-  .then(response => console.log(response))
+  .then(response => {
+    console.log(response)
+    if(Array.isArray(response) && response.length === 0) {
+      Trail.create({
+        name,
+        summary,
+        imgSmall,
+        difficulty,
+        stars,
+        latitude,
+        longitude,
+      })
+      .then(trail => {
+        console.log(trail)
+        User.updateOne({ _id:req.user.id },{$push: { likedTrails:trail._id }})
+        .then(() => {
+          res.status(200).json({message: 'trail created and then succesfully added'})
+        })
+        .catch(e => console.log(e))
+      })
+    } else {
 
+      User.exists({likedTrails: response[0]._id})
+      .then(boolean => {
+        //console.log(user[0].likedTrails)
+        //console.log(response[0]._id)
+        //let check = user[0].likedTrails.includes(response[0]._id)
+        
 
+        if(boolean) {
+
+          res.status(200).json({message: 'this trail has already been added'})
+          return
+
+        } else {
+          
+          User.updateOne({_id:req.user.id},{$push: { likedTrails: response[0]._id }})
+          .then(() => {
+            res.status(200).json({message: 'trail succesfully added'})
+          })
+          .catch(e => console.log(e))
+        }
+      })
+      .catch(e => console.log(e))
+    }
+  })
 })
 
+// get trails from user
+router.get('/fetchUserTrails', (req, res, next) => {
+    User.findById(req.user.id).populate('trails')
+    .then(response => {
+        res.status(200).json(response.trails)
+    })
+    .catch(e => next(e))
+});
 
+// get favorite trails from user
+router.get('/fetchFavoriteUserTrails', (req, res, next) => {
+  User.findById(req.user.id).populate('likedTrails')
+  .then(response => {
+      res.status(200).json(response.likedTrails)
+  })
+  .catch(e => next(e))
+});
 
+// delete trail 
+router.post('/deleteTrail', (req, res, next) => {
+  const { id, type } = req.body
+  console.log(req.body)
+  if(type === 'trails') {
+    User.updateOne({ _id:req.user.id },{$pull: { trails: id }})
+    .then(() => {
+      res.status(200).json({message: 'trail removed succesfully'})
+    })
+    .catch(e => next(e))
+  } 
 
+  if(type === 'favoriteTrails') {
+    User.updateOne({ _id:req.user.id },{$pull: { likedTrails: id }})
+    .then(() => {
+      res.status(200).json({message: 'trail removed succesfully'})
+    })
+    .catch(e => next(e))
+  }
+ 
+})
 
-router.get('/trails', (req, res, next) => {
-    Trail.find()
-      .populate('tasks')
-      .then(allTheTrails => {
-        res.json(allTheTrails);
-      })
-      .catch(err => {
-        res.json(err);
-      });
-  });
-
-router.get('/trails/:id', (req, res, next) => {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      res.status(400).json({ message: 'Specified id is not valid' });
-      return;
-    }
-   
-    Trail.findById(req.params.id)
-      .populate('tasks')
-      .then(trail => {
-        res.status(200).json(trail);
-      })
-      .catch(error => {
-        res.json(error);
-      });
-  });
-   
-router.put('/trails/:id', (req, res, next) => {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      res.status(400).json({ message: 'Specified id is not valid' });
-      return;
-    }
-   
-    Trail.findByIdAndUpdate(req.params.id, req.body)
-      .then(() => {
-        res.json({ message: `Trail with ${req.params.id} is updated successfully.` });
-      })
-      .catch(error => {
-        res.json(error);
-      });
-  });
-
-router.delete('/trails/:id', (req, res, next) => {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      res.status(400).json({ message: 'Specified id is not valid' });
-      return;
-    }
-   
-    Trail.findByIdAndRemove(req.params.id)
-      .then(() => {
-        res.json({ message: `Trail with ${req.params.id} is removed successfully.` });
-      })
-      .catch(error => {
-        res.json(error);
-      });
-  });
    
 module.exports = router;

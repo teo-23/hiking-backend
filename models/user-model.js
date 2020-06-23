@@ -4,6 +4,8 @@ const Schema   = mongoose.Schema;
 const userSchema = new Schema({
   username: String,
   password: String,
+  trails: [{type: Schema.Types.ObjectId, ref: 'Trail'}],
+  likedTrails: [{type: Schema.Types.ObjectId, ref: 'Trail', unique: true}],
   role: {
     type: String,
     enum: ['USER','ADMIN'],

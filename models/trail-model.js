@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 const User = require('./user-model');
  
 const trailSchema = new Schema({
-  name: String,
-  summary: String,
-  imgSmall: String, 
+  name: {type: String, required: true},
+  summary: {type: String, required: true},
+  imgSmall: String,
   difficulty: String,
   stars: Number,
   latitude: Number,
