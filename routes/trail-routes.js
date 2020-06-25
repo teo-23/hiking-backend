@@ -96,7 +96,7 @@ router.post('/addToFavorite', (req, res, next) => {
         console.log(trail)
         User.updateOne({ _id:req.user.id },{$push: { likedTrails:trail._id }})
         .then(() => {
-          res.status(200).json({message: 'trail created and then succesfully added'})
+          res.status(200).json({message: 'trail succesfully added to favorites'})
         })
         .catch(e => console.log(e))
       })
@@ -118,7 +118,7 @@ router.post('/addToFavorite', (req, res, next) => {
           
           User.updateOne({_id:req.user.id},{$push: { likedTrails: response[0]._id }})
           .then(() => {
-            res.status(200).json({message: 'trail succesfully added'})
+            res.status(200).json({message: 'trail succesfully added to favorites'})
           })
           .catch(e => console.log(e))
         }
